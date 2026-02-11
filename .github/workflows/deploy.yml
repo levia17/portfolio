@@ -15,13 +15,15 @@ jobs:
         uses: goto-bus-stop/setup-zig@v2
         with:
           zig-version: '0.11.0'
-
-      - name: Install kristoff-it/zine
+      
+      - name: Build and Install kristoff-it/zine from source
         run: |
-          curl -L -o zine https://github.com/kristoff-it/zine/releases/latest/download/zine-x86_64-linux
-          chmod +x zine
-          sudo mv zine /usr/local/bin/
-    
+          git clone https://github.com/kristoff-it/zine.git
+          cd zine
+          zig build -Drelease-safe
+          sudo cp zig-out/bin/zine /usr/local/bin/
+          cd ..
+          
       - name: Build static site with zine
         run: |
           cd site
