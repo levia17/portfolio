@@ -18,8 +18,10 @@ jobs:
 
       - name: Install kristoff-it/zine
         run: |
-          curl -L https://github.com/kristoff-it/zine/releases/latest/download/zine-x86_64-linux.tar.xz | tar -xJ && sudo mv zine /usr/local/bin/
-
+          curl -L -o zine https://github.com/kristoff-it/zine/releases/latest/download/zine-x86_64-linux
+          chmod +x zine
+          sudo mv zine /usr/local/bin/
+    
       - name: Build static site with zine
         run: |
           cd site
