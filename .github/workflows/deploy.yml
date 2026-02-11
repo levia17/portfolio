@@ -1,0 +1,35 @@
+name: Deploy Zine Static Site to GitHub Pages
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Zig
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          zig-version: '0.11.0'
+
+      - name: Install kristoff-it/zine
+        run: |
+          curl -L https://github.com/kristoff-it/zine/releases/latest/download/zine-x86_64-linux.tar.xz | tar -xJ && sudo mv zine /usr/local/bin/
+
+      - name: Build static site with zine
+        run: |
+          cd site
+          zine build
+          cd ..
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site/public
+          publish_branch: gh-pages
+          force_orphan: true
